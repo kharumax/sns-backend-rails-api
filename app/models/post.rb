@@ -8,6 +8,9 @@ class Post < ApplicationRecord
             size:         { less_than: 5.megabytes,
                             message: "should be less than 5MB" }
   has_one_attached :image
+  belongs_to :user
+  has_many :likes
+  has_many :comments
 
   def image_url
     if self.image.attached?

@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user,only: [:update]
+  before_action :authenticate_user,only: [:update,:mypage]
   before_action :correct_user,only: [:update]
 
   def index
@@ -39,6 +39,25 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def destroy; end
+
+  def mypage
+    posts = PostSerializer.new(current_user.get_posts).serialized_json
+    liked_posts = PostSerializer.new(current_user.get_liked_posts).serialized_json
+    following_cnt = current_user.following.count
+    follower_cnt =  current_user.followers.count
+    user_info = UserSerializer.new(current_user).serialized_json
+    render json: {
+        success: true,
+        message: "Get Mypage Information Success",
+        data: {
+            posts: posts,
+            liked_posts: liked_posts,
+            following_cnt: following_cnt,
+            follower_cnt: follower_cnt,
+            user_info: user_info
+        }
+    }
+  end
 
   private
   
